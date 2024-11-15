@@ -78,7 +78,7 @@ const PacmanBackground: React.FC = () => {
         left: 0,
         display: "block",
         zIndex: -1,
-        opacity: 0.2,
+        opacity: 0.3,
       }}
     />
   );

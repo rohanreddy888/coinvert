@@ -38,7 +38,7 @@ export const ConnectWithEmailView: FC = () => {
       >
         {!email ? (
           <input
-            className="w-full rounded-lg border border-border px-4 py-2 text-white bg-input text-sm"
+            className="w-full rounded-lg border-2 border-border px-4 py-2 text-white bg-input text-sm"
             type="email"
             name="email"
             placeholder="Email"
@@ -46,7 +46,7 @@ export const ConnectWithEmailView: FC = () => {
           />
         ) : (
           <input
-            className="w-full rounded-lg border border-border px-4 py-2 text-white bg-input text-sm"
+            className="w-full rounded-lg border-2 border-border px-4 py-2 text-white bg-input text-sm"
             type="number"
             name="otp"
             placeholder="OTP"
@@ -55,7 +55,7 @@ export const ConnectWithEmailView: FC = () => {
         )}
 
         <button
-          className="bg-primary w-full px-2 py-1.5 rounded-lg border border-border font-semibold"
+          className="bg-primary w-full px-2 py-1.5 rounded-lg border-2 border-border font-semibold"
           type="submit"
         >
           {!email ? "Submit" : "Verify"}

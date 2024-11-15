@@ -4,6 +4,7 @@ import "./globals.css";
 import PacmanBackground from "./components/PacmanBackground";
 import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
+import Footer from "./components/Footer";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-geist-sans",
@@ -32,10 +33,11 @@ export default function RootLayout({
             walletConnectors: [EthereumWalletConnectors],
           }}
         >
-          {children}
+          <div className="px-4">{children}</div>
         </DynamicContextProvider>
 
         <PacmanBackground />
+        <Footer />
       </body>
     </html>
   );

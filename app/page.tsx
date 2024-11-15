@@ -4,8 +4,8 @@ import { DynamicSocialLogin } from "./components/Dynamic/Dynamic";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col gap-12 justify-center items-center text-white text-center">
-      <div className="flex flex-col justify-center items-center gap-12">
+    <div className="min-h-screen flex flex-col gap-8 md:gap-16 justify-center items-center text-white text-center">
+      <div className="flex flex-col justify-center items-center gap-8 md:gap-12 max-w-72 md:max-w-md w-full">
         <Image src="/logo.svg" alt="Logo" width={350} height={350} />
 
         <GradualSpacing

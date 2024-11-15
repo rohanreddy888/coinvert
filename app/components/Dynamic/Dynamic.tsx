@@ -1,7 +1,6 @@
 "use client";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import {
-  DynamicWidget,
   useDynamicContext,
   useSocialAccounts,
 } from "@dynamic-labs/sdk-react-core";
@@ -9,6 +8,8 @@ import { ProviderEnum } from "@dynamic-labs/types";
 import { DiscordIcon, FarcasterIcon, GoogleIcon } from "@dynamic-labs/iconic";
 import { Separator } from "@/components/ui/separator";
 import { ConnectWithEmailView } from "./ConnectEmail";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const SocialSignIn = () => {
   const { error, signInWithSocialAccount } = useSocialAccounts();
@@ -49,12 +50,16 @@ const SocialSignIn = () => {
 
 const LoggedInUser = () => {
   const { user } = useDynamicContext();
-
+  const router = useRouter();
+  useEffect(() => {
+    if (user) {
+      router.push("/home");
+    }
+  }, [router, user]);
   return (
-    <>
-      <DynamicWidget />
-      <p>User: {user?.email}</p>
-    </>
+    <div className="flex justify-center items-center w-full">
+      <Image src="/pacman.gif" alt="Logo" width={50} height={50} />
+    </div>
   );
 };
 
@@ -63,8 +68,9 @@ export const DynamicSocialLogin: FC = () => {
 
   return (
     <div className="fancy-box max-w-md w-full bg-transparent rounded-xl">
-      <div className="bg-card flex flex-col justify-center items-center gap-4 px-6 py-5 border border-border rounded-xl w-full">
-        <h2 className="font-semibold text-lg">Log in or sign up</h2>
+      <div className="bg-card flex flex-col justify-center items-center gap-4 px-6 py-5 border-2 border-border rounded-xl w-full">
+        <h2 className="font-semibold text-lg mb-2">Log in or sign up</h2>
+
         <div className="w-full mt-4">
           {user ? <LoggedInUser /> : <SocialSignIn />}
         </div>
@@ -76,7 +82,7 @@ export const DynamicSocialLogin: FC = () => {
             xmlns="http://www.w3.org/2000/svg"
             className="h-3.5"
           >
-            <g clip-path="url(#a)">
+            <g clipPath="url(#a)">
               <path
                 d="m10.053 2.0025c-0.42916 0.39997-0.85094 0.79254-1.2727 1.1832-1.959 1.8184-3.9181 3.6387-5.879 5.4534-0.44952 0.41664-0.9157 0.81661-1.4799 1.061-0.67151 0.29072-1.0563 0.10925-1.2727-0.61478-0.30153-1.0129-0.14059-1.9573 0.44212-2.8276 0.49578-0.7407 1.121-1.3573 1.7629-1.9573 1.023-0.9555 2.0534-1.9017 3.0967-2.8313 0.45693-0.40738 0.9564-0.77957 1.5669-0.90364 1.8277-0.3685 2.9932 1.3832 3.0376 1.4351l-0.0019 0.00186z"
                 fill="currentColor"
