@@ -1,6 +1,6 @@
 import GradualSpacing from "@/components/ui/gradual-spacing";
 import Image from "next/image";
-import { HeadlessSocialSignInView } from "./components/Dynamic/Dynamic";
+import { DynamicSocialLogin } from "./components/Dynamic/Dynamic";
 
 export default function Home() {
   return (
@@ -13,13 +13,7 @@ export default function Home() {
           text="Auto-Swap Your Crypto, Your Way!"
         />
       </div>
-      <div className="fancy-box max-w-md w-full bg-transparent rounded-xl">
-        <div className="bg-card flex flex-col justify-center items-center gap-4 px-6 py-4 border border-border rounded-xl">
-          <h2 className="font-semibold">Log in or sign up</h2>
-
-          <HeadlessSocialSignInView />
-        </div>
-      </div>
+      <DynamicSocialLogin />
       {/* <p className="text-xl max-w-4xl">
         Coinvert is an innovative crypto application that automates token swaps.
         Whenever tokens are received in your wallet, Coinvert instantly converts

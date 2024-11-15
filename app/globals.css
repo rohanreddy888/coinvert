@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --primary: #ff4e17;
-}
-
 body {
   font-family: "Inter", sans-serif;
 }
@@ -30,7 +26,7 @@ body {
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
+    --primary: 14, 100%, 55%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
@@ -49,6 +45,7 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --input: 223, 11%, 12%;
   }
 }
 
@@ -59,4 +56,26 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Remove spinners in modern browsers */
+input[type="number"] {
+  appearance: textfield; /* Removes default browser styling */
+}
+
+/* For WebKit browsers (Chrome, Safari, Edge) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Removes spin buttons */
+  margin: 0; /* Removes any margin added by the browser */
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield; /* Removes spin buttons in Firefox */
+}
+
+input:focus {
+  outline: none; /* Removes the browser default outline */
+  box-shadow: none; /* Removes any box-shadow focus effects */
 }
