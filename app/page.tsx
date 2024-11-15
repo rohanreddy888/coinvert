@@ -14,11 +14,10 @@ export default function Home() {
         />
       </div>
       <div className="fancy-box max-w-md w-full bg-transparent rounded-xl">
-        <div>
-          <div className="bg-card px-6 py-4 border border-border rounded-xl">
-            <h2 className="font-semibold">Log in or sign up</h2>
-            <HeadlessSocialSignInView />
-          </div>
+        <div className="bg-card flex flex-col justify-center items-center gap-4 px-6 py-4 border border-border rounded-xl">
+          <h2 className="font-semibold">Log in or sign up</h2>
+
+          <HeadlessSocialSignInView />
         </div>
       </div>
       {/* <p className="text-xl max-w-4xl">

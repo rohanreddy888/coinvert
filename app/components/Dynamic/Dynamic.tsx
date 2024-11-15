@@ -12,25 +12,29 @@ const SocialSignIn = () => {
   const { error, isProcessing, signInWithSocialAccount } = useSocialAccounts();
 
   return (
-    <div className="headless-social-signin">
-      <div className="headless-social-signin__container">
-        <p>Log in or sign up</p>
-
-        <button onClick={() => signInWithSocialAccount(ProviderEnum.Farcaster)}>
-          <FarcasterIcon />
-          Sign in with Farcaster
+    <div className="flex flex-col justify-center items-center gap-4">
+      <div className="flex flex-row justify-center items-center gap-4">
+        <button
+          className="bg-white p-2 rounded-md shadow-md"
+          onClick={() => signInWithSocialAccount(ProviderEnum.Farcaster)}
+        >
+          <FarcasterIcon className="w-8 h-8" />
         </button>
-        <button onClick={() => signInWithSocialAccount(ProviderEnum.Google)}>
-          <GoogleIcon />
-          Sign in with Google
+        <button
+          className="bg-white p-2 rounded-md shadow-md"
+          onClick={() => signInWithSocialAccount(ProviderEnum.Google)}
+        >
+          <GoogleIcon className="w-8 h-8" />
         </button>
-        <button onClick={() => signInWithSocialAccount(ProviderEnum.Twitter)}>
-          <TwitterIcon />
-          Sign in with Twitter
+        <button
+          className="bg-white p-2 rounded-md shadow-md"
+          onClick={() => signInWithSocialAccount(ProviderEnum.Twitter)}
+        >
+          <TwitterIcon className="w-8 h-8 text-white" />
         </button>
         {isProcessing && <span className="processing">Processing...</span>}
-        {error && <span className="error">{error.message}</span>}
       </div>
+      {error && <span className="error">{error.message}</span>}
     </div>
   );
 };

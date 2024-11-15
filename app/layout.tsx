@@ -3,6 +3,7 @@ import { Roboto as Inter } from "next/font/google";
 import "./globals.css";
 import PacmanBackground from "./components/PacmanBackground";
 import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
+import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-geist-sans",
@@ -27,7 +28,8 @@ export default function RootLayout({
       >
         <DynamicContextProvider
           settings={{
-            environmentId: "XXXXX",
+            environmentId: "0f83bd3a-7074-49ed-bc7f-fe2a4a1d1aab",
+            walletConnectors: [EthereumWalletConnectors],
           }}
         >
           {children}
