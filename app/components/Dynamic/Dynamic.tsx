@@ -32,8 +32,8 @@ const SocialSignIn = () => {
         >
           <TwitterIcon className="w-8 h-8 text-white" />
         </button>
-        {isProcessing && <span className="processing">Processing...</span>}
       </div>
+      {isProcessing && <span className="processing">Processing...</span>}
       {error && <span className="error">{error.message}</span>}
     </div>
   );
