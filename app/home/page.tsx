@@ -1,5 +1,4 @@
 "use client";
-
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,12 +31,14 @@ import {
 } from "@/components/ui/select";
 import Tokens from "../utils/Tokens";
 import { Slider } from "@/components/ui/slider";
+import Link from "next/link";
 
 export default function Page() {
   const router = useRouter();
   const { handleLogOut, primaryWallet, user } = useDynamicContext();
   const [showAutoSwap, setShowAutoSwap] = useState(false);
   const [percentage, setPercentage] = useState(33);
+  const [showTx, setShowTx] = useState(true);
 
   useEffect(() => {
     if (!user) {
@@ -269,6 +270,46 @@ export default function Page() {
             <button className="bg-red-200 text-red-600 flex flex-row justify-center items-center gap-4 w-full px-4 py-2.5 rounded-lg border-2 border-border font-semibold mt-4">
               Create Auto Swap
             </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={showTx} onOpenChange={setShowTx}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Incoming Transaction</DialogTitle>
+            <DialogDescription>
+              We are swapping your incoming token to desired token.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-3 place-items-center gap-4 text-white text-center my-4">
+            <div className="flex flex-col justify-center items-center gap-2">
+              <div className="bg-white rounded-full flex flex-row justify-center items-center gap-2">
+                <Image
+                  src={Tokens[0].logoURI}
+                  alt={Tokens[0].symbol}
+                  width={60}
+                  height={60}
+                />
+              </div>
+              <h3 className="font-bold">{Tokens[0].symbol}</h3>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-4">
+              <Image src="/pacman.gif" alt="Pacman" width={40} height={40} />
+              <Link href={"/"} target="_blank" className="underline text-sm">
+                View on Blockscan
+              </Link>
+            </div>
+            <div className="flex flex-col justify-center items-center gap-2">
+              <div className="bg-white rounded-full flex flex-row justify-center items-center gap-2">
+                <Image
+                  src={Tokens[1].logoURI}
+                  alt={Tokens[1].symbol}
+                  width={60}
+                  height={60}
+                />
+              </div>
+              <h3 className="font-bold">{Tokens[1].symbol}</h3>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
