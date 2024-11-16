@@ -5,6 +5,7 @@ import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 import Footer from "./components/Footer";
 import Inter from "./fonts/Inter";
+import BalanceMonitor from "./components/BalanceMonitor";
 
 export const metadata: Metadata = {
   title: "Coinvert: Auto-Swap Your Crypto, Your Way!",
@@ -32,6 +33,7 @@ export default function RootLayout({
         </DynamicContextProvider>
 
         <PacmanBackground />
+        {/* <BalanceMonitor/> */}
         <Footer />
       </body>
     </html>

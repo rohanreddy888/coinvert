@@ -100,15 +100,15 @@ export const getSmartAccountClient = async ( { chainId, nonceKey, signer, addres
 
   const client = publicClient(parseInt(chainId))
   client.chain = getChain(chainId)
-  const nexusAccount = await toNexusSmartAccount({
-    client: client,
-    owners: [signer],
-    version: "1.0.0",
-    index: BigInt(0), // optional
-    factoryAddress,
-    validatorAddress,
-    address: address, // optional, only if you are using an already created account,
-  })
+  // const nexusAccount = await toNexusSmartAccount({
+  //   client: client,
+  //   owners: [signer],
+  //   version: "1.0.0",
+  //   index: BigInt(0), // optional
+  //   factoryAddress,
+  //   validatorAddress,
+  //   address: address, // optional, only if you are using an already created account,
+  // })
 
   const safeAccount = await toSafeSmartAccount({
     client: client,
@@ -125,7 +125,7 @@ export const getSmartAccountClient = async ( { chainId, nonceKey, signer, addres
   })
 
 
-  nexusAccount.getNonce()
+  // nexusAccount.getNonce()
 
   const pimlicoClient = getPimlicoClient(chainId)
   const smartAccountClient = createSmartAccountClient({

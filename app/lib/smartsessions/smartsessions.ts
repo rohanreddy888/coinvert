@@ -26,6 +26,8 @@ import {
 
 
   export const SMART_SESSIONS_ADDRESS = "0xF83FB5ae5026ce83982919d447A255421437434a"
+  // export const SMART_SESSIONS_ADDRESS = "0x771D0ac7E0B0E0B9D685FD38Fe332a1725c62BCC"
+
   
   export const getPermissionId = ({ session }: { session: Session }): Hex => {
     return keccak256(

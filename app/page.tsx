@@ -1,6 +1,7 @@
 import GradualSpacing from "@/components/ui/gradual-spacing";
 import Image from "next/image";
 import { DynamicSocialLogin } from "./components/Dynamic/Dynamic";
+import BalanceMonitor from "./components/BalanceMonitor";
 
 export default function Home() {
   return (

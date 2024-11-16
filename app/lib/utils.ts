@@ -99,6 +99,19 @@ export async function getTokenBalance(tokenAddress: string, account: string, pro
   return formatUnits(balance, decimals);
 }
 
+export async function getRawTokenBalance(tokenAddress: string, account: string, provider: any) {
+  // Ethereum provider (you can use Infura or any other provider)
+
+  // Connect to the ERC-20 token contract
+  const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
+
+  // Get the balance using the balanceOf function
+  const balance = await tokenContract.balanceOf(account);
+  const decimals = await tokenContract.decimals()
+
+  return {balance, decimals};
+}
+
 export async function getSpendableTokenInfo(chainId: string, tokenAddress: Hex, account: Hex, validator: {address: Address, initData: Hex}) {
   
   // Ethereum provider (you can use Infura or any other provider)

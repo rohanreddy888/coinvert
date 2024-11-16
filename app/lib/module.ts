@@ -42,7 +42,9 @@ export const passkeySessionValidator = "0xA66C14045a68232B0d3aC75566C449A9167F85
 export const autoSwapExecutor = "0x0285F7b1bc7ef669f5F2554e8b0DaB0ab834Fc00"
 export const sessionValidator = "0x8D4Bd3f21CfE07FeDe4320F1DA44F5d5d9b9952C"
 export const validatorAccount = "0xC70548d74f4A93a25b7d4754Bf536282971832c6"
+// export const spendLimitPolicy = "0xED0FbC27Ca0D7e48F4aB40b1F88f74B7F6118884"
 export const spendLimitPolicy = "0xED0FbC27Ca0D7e48F4aB40b1F88f74B7F6118884"
+
 export const smartSession = SMART_SESSIONS_ADDRESS
 import { getChainId, signMessage as signMessageViem } from "viem/actions"
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
@@ -370,8 +372,6 @@ export const sendSessionTransaction = async (chainId: string, calls: Transaction
       chainId,
       signer: signer,
       address: safeAccount,
-      factoryAddress: "0xE8067f399052083d60e66Ef414ddB9f166E2C100",
-      validatorAddress: "0x5aec3f1c43B920a4dc21d500617fb37B8db1992C"
     });
 
     const userOperation = await smartAccount.prepareUserOperation({calls , nonce, signature: encodeSmartSessionSignature(sessionDetails) });
@@ -527,7 +527,9 @@ export const buildEnableSmartSession = async (chainId: string): Promise<Transact
             {
               actionTarget: autoSwapExecutor as Address, // an address as the target of the session execution
               actionTargetSelector: execCallSelector as Hex, // function selector to be used in the execution, in this case no function selector is used
-              actionPolicies: [{policy: "0x10C917bc684Af33e10843061022346E72c943e3c", initData: "0x"}],
+              actionPolicies: [{policy: "0x10C917bc684Af33e10843061022346E72c943e3c", initData: "0x"}], 
+              // actionPolicies: [{policy: "0xa445BD8a6eE29E410892910feA2cAb474CB21F92", initData: "0x"}], 
+
             },
           ],
           chainId: BigInt(chainId),
