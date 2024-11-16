@@ -10,7 +10,7 @@ import {
   Settings,
   Wallet,
 } from "lucide-react";
-import { Truncate } from "../utils/truncate";
+import { Truncate } from "../utils/Truncate";
 import CopyString from "../utils/CopyString";
 
 export default function Page() {
