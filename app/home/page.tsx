@@ -1,18 +1,21 @@
 "use client";
-
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   CircleUserRound,
   ClipboardCopy,
+  Plus,
   Power,
+  QrCode,
+  Replace,
   Settings,
   Wallet,
 } from "lucide-react";
-import { Truncate } from "../utils/Truncate";
+import { Truncate } from "../utils/truncate";
 import CopyString from "../utils/CopyString";
 import { useEffect, useState } from "react";
+
 import { getSmartAccountClient } from "../lib/permissionless";
 import { privateKeyToAccount } from "viem/accounts";
 import { buildAutoSwap, buildEnableSmartSession, buildExecuteAutoSwap, buildOwnableModule, buildSmartSessionModule, buildUseSmartSession, sendOwnableTransaction, sendSessionTransaction, sendTransaction, Transaction } from "../lib/module";
@@ -20,17 +23,35 @@ import { Address, Hex, parseEther, WalletClient } from "viem";
 import { SmartAccountClient } from "permissionless";
 import { parseUnits, ZeroAddress } from "ethers";
 
-export default function Page() {
+import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import Tokens from "../utils/Tokens";
+import { Slider } from "@/components/ui/slider";
+import Link from "next/link";
 
-  const { primaryWallet, handleLogOut } = useDynamicContext();
+export default function Page() {
   const router = useRouter();
+  const { handleLogOut, primaryWallet, user } = useDynamicContext();
 
   const [ walletAddress, setWalletAddress ] = useState<Address>(ZeroAddress as Address);
-  const [ accountClient, setAccountClient ] = useState<SmartAccountClient>();
+  const [ accountClient, setAccountClient ] = useState<SmartAccountClient|undefined>();
   const [ account, setAccount ] = useState<WalletClient>();
-
-
-
+  const [showAutoSwap, setShowAutoSwap] = useState(false);
+  const [percentage, setPercentage] = useState(33);
+  const [showTx, setShowTx] = useState(true);
 
   const chainId = 11235
 
@@ -96,6 +117,17 @@ export default function Page() {
   }
 
 
+
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+    }
+  }, [router, user]);
+
+
+
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-white w-full">
       <div className="fancy-box max-w-md w-full bg-transparent rounded-xl">
@@ -106,11 +138,11 @@ export default function Page() {
           <div className="flex flex-col flex-grow px-6 py-5 w-full">
             <TabsContent value="account">
               <div className="bg-border w-full rounded-lg px-4 py-2 flex flex-row justify-start items-center flex-wrap gap-2">
-                <h4 onClick={()=> { useSmartSession(); }} className="font-bold">Account: </h4>
+                <h4 className="font-bold">Account: </h4>
                 <div className="flex flex-row justify-start items-center gap-2">
-                  {Truncate(walletAddress, 22, "...")}
+                  {Truncate(primaryWallet?.address, 22, "...")}
                   <CopyString
-                    copyText={walletAddress || ""}
+                    copyText={primaryWallet?.address || ""}
                     icon={<ClipboardCopy size={20} />}
                   />
                 </div>
