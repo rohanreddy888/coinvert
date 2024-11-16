@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import { Roboto as Inter } from "next/font/google";
 import "./globals.css";
 import PacmanBackground from "./components/PacmanBackground";
 import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 import Footer from "./components/Footer";
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-  weight: ["100", "300", "400", "500", "700", "900"],
-});
+import Inter from "./fonts/Inter";
 
 export const metadata: Metadata = {
   title: "Coinvert: Auto-Swap Your Crypto, Your Way!",
@@ -25,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} antialiased bg-black relative w-full`}
+        className={`${Inter.className} antialiased bg-black relative w-full`}
       >
         <DynamicContextProvider
           settings={{
