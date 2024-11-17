@@ -108,38 +108,7 @@ export const getSpendPolicy = async (chainId: string, configId: string, token: A
   return sesionData;
 }
 
-// export const getSessionData = async (chainId: string, sessionId: string): Promise<any> => {
 
-
-//   const provider = await getJsonRpcProvider(chainId)
-//   const  { address} = await getDetails()
-
-
-//   const autoDCA = new Contract(
-//       autoDCAExecutor,
-//       AutoSwapExecutor.abi,
-//       provider
-//   )
-
-//   const sesionData = await autoDCA.getJobData(address);
-//   return sesionData;
-// }
-
-
-// export const getAllJobs = async (chainId: string, safeAccount: string): Promise<any> => {
-
-
-//   const provider = await getJsonRpcProvider(chainId)
-
-//   const autoDCA = new Contract(
-//       autoDCAExecutor,
-//       AutoSwapExecutor.abi,
-//       provider
-//   )
-
-//   const jobData = await autoDCA.getJobData(safeAccount);
-//   return jobData;
-// }
 
 async function toSessionkeyAccount(
   chainId: number,
@@ -209,7 +178,7 @@ async function toSessionkeyAccount(
 
 
 
-export const sendTransaction = async (chainId: string, calls: Transaction[], signer: any, safeAccount?: Hex, transactionType: "normal" | "session" = "normal", sessionDetails?:  {
+export const sendTransaction = async (chainId: string, calls: Transaction[], signer: any, nexusAddress?: Hex, transactionType: "normal" | "session" = "normal", sessionDetails?:  {
     mode: SmartSessionModeType
     permissionId: Hex
     enableSessionData?: EnableSessionData
@@ -248,7 +217,7 @@ export const sendTransaction = async (chainId: string, calls: Transaction[], sig
        smartAccount = await getSmartAccountClient({
         chainId,
         nonceKey: key,
-        address: safeAccount,
+        address: nexusAddress,
         signUserOperation: signingAccount.signUserOperation,
         getDummySignature: signingAccount.getDummySignature,
         factoryAddress: "0xE8067f399052083d60e66Ef414ddB9f166E2C100",
@@ -263,7 +232,7 @@ export const sendTransaction = async (chainId: string, calls: Transaction[], sig
 
 
 
-export const sendOwnableTransaction = async (chainId: string, calls: Transaction[], signer: any, safeAccount: Hex,  sessionDetails:  {
+export const sendOwnableTransaction = async (chainId: string, calls: Transaction[], signer: any, nexusAddress: Hex,  sessionDetails:  {
   mode: SmartSessionModeType
   permissionId: Hex,
   signature: Hex,
@@ -284,7 +253,7 @@ export const sendOwnableTransaction = async (chainId: string, calls: Transaction
 
 
   const account = getAccount({
-    address: safeAccount,
+    address: nexusAddress,
     type: 'nexus',
   })
 
@@ -294,7 +263,7 @@ export const sendOwnableTransaction = async (chainId: string, calls: Transaction
 
 
   const nonce = await getAccountNonce(client, {
-    address: safeAccount,
+    address: nexusAddress,
     entryPointAddress: entryPoint07Address,
     key: encodeValidatorNonce({
       account,
@@ -306,7 +275,7 @@ export const sendOwnableTransaction = async (chainId: string, calls: Transaction
   const smartAccount = await getSmartAccountClient({
       chainId,
       signer: signer,
-      address: safeAccount,
+      address: nexusAddress,
       // factoryAddress: "0xE8067f399052083d60e66Ef414ddB9f166E2C100",
       // validatorAddress: "0x5aec3f1c43B920a4dc21d500617fb37B8db1992C"
     });
@@ -337,7 +306,7 @@ export const sendOwnableTransaction = async (chainId: string, calls: Transaction
 }
 
 
-export const sendSessionTransaction = async (chainId: string, calls: Transaction[], signer: any, safeAccount: Hex,  sessionDetails:  {
+export const sendSessionTransaction = async (chainId: string, calls: Transaction[], signer: any, nexusAddress: Hex,  sessionDetails:  {
   mode: SmartSessionModeType
   permissionId: Hex,
   signature: Hex,
@@ -354,7 +323,7 @@ export const sendSessionTransaction = async (chainId: string, calls: Transaction
   const client = publicClient(parseInt(chainId));
 
   const nonce = await getAccountNonce(client, {
-    address: safeAccount,
+    address: nexusAddress,
     entryPointAddress: entryPoint07Address,
     key: key,
   })
@@ -371,7 +340,7 @@ export const sendSessionTransaction = async (chainId: string, calls: Transaction
   const smartAccount = await getSmartAccountClient({
       chainId,
       signer: signer,
-      address: safeAccount,
+      address: nexusAddress,
     });
 
     const userOperation = await smartAccount.prepareUserOperation({calls , nonce, signature: encodeSmartSessionSignature(sessionDetails) });
@@ -429,24 +398,24 @@ export const buildAutoSwap = async (chainId: string,  accuont: Address, fromToke
   return calls;
 }
 
-export const buildSmartSessionModule = async (chainId: string, safeAccount: Address): Promise<Transaction | undefined> => {
+export const buildSmartSessionModule = async (chainId: string, nexusAddress: Address): Promise<Transaction | undefined> => {
 
     
-  if(!await isInstalled(parseInt(chainId), safeAccount, smartSession, "validator")){
+  if(!await isInstalled(parseInt(chainId), nexusAddress, smartSession, "validator")){
     
-    return await buildInstallModule(parseInt(chainId), safeAccount, smartSession, "validator", "0x" )
+    return await buildInstallModule(parseInt(chainId), nexusAddress, smartSession, "validator", "0x" )
 
   }
 }
 
 
-export const buildOwnableModule = async (chainId: string, safeAccount: Address): Promise<Transaction | undefined> => {
+export const buildOwnableModule = async (chainId: string, nexusAddress: Address): Promise<Transaction | undefined> => {
 
   
   const sessionValidator = getSessionValidatorDetails()
-  if(!await isInstalled(parseInt(chainId), safeAccount, OWNABLE_VALIDATOR_ADDRESS, "validator")){
+  if(!await isInstalled(parseInt(chainId), nexusAddress, OWNABLE_VALIDATOR_ADDRESS, "validator")){
     
-    return await buildInstallModule(parseInt(chainId), safeAccount, OWNABLE_VALIDATOR_ADDRESS, "validator", sessionValidator.initData )
+    return await buildInstallModule(parseInt(chainId), nexusAddress, OWNABLE_VALIDATOR_ADDRESS, "validator", sessionValidator.initData )
 
   }
   else{
@@ -549,15 +518,15 @@ export const buildEnableSmartSession = async (chainId: string): Promise<Transact
 
 
 
-export const buildInstallModule = async (chainId: number, safeAccount: Address, address: Address, type: ModuleType, initData: Hex): Promise<Transaction> => {
+export const buildInstallModule = async (chainId: number, nexusAddress: Address, address: Address, type: ModuleType, initData: Hex): Promise<Transaction> => {
 
 
     const client = getClient({ rpcUrl: NetworkUtil.getNetworkById(chainId)?.url!});
 
     // Create the account object
     const account = getAccount({
-            address: safeAccount,
-            type: "safe",
+            address: nexusAddress,
+            type: "nexus",
         });
 
 
@@ -580,7 +549,7 @@ export const buildInstallModule = async (chainId: number, safeAccount: Address, 
 
 
 
-export const isInstalled = async (chainId: number, safeAddress: Address, address: Address, type: ModuleType): Promise<boolean> => {
+export const isInstalled = async (chainId: number, nexusAddress: Address, address: Address, type: ModuleType): Promise<boolean> => {
 
 
 
@@ -589,8 +558,8 @@ export const isInstalled = async (chainId: number, safeAddress: Address, address
 
     // Create the account object
     const account = getAccount({
-            address: safeAddress,
-            type: "safe",
+            address: nexusAddress,
+            type: "nexus",
         });
 
 

@@ -4,11 +4,6 @@
 
 body {
   font-family: "Inter", sans-serif;
-  overflow: hidden;
-}
-
-html, body {
-  @apply overflow-hidden;
 }
 
 .fancy-box {

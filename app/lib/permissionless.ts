@@ -34,7 +34,6 @@ import {
 } from 'permissionless'
 import {
    toNexusSmartAccount,
-   toSafeSmartAccount
 } from 'permissionless/accounts'
 import { erc7579Actions, Erc7579Actions } from 'permissionless/actions/erc7579'
 import {
@@ -45,11 +44,6 @@ import { publicClient } from './utils'
 import { Erc7739ActionsParameters } from 'viem/experimental'
 import { NetworkUtil } from './networks'
 
-// export type SafeSmartAccountClient = SmartAccountClient<
-//   EntryPoint,
-//   Transport,
-//   Chain> &
-//   Erc7579Actions<EntryPoint, Transport, Chain, SafeSmartAccount<EntryPoint, Transport, Chain>>
 
   export const getChain = (chainId: string) : Chain => {
     return [base, polygon, polygonsandbox, sepolia, baseSepolia].find((chain: any) => chain.id == chainId) as Chain;
@@ -100,36 +94,23 @@ export const getSmartAccountClient = async ( { chainId, nonceKey, signer, addres
 
   const client = publicClient(parseInt(chainId))
   client.chain = getChain(chainId)
-  // const nexusAccount = await toNexusSmartAccount({
-  //   client: client,
-  //   owners: [signer],
-  //   version: "1.0.0",
-  //   index: BigInt(0), // optional
-  //   factoryAddress,
-  //   validatorAddress,
-  //   address: address, // optional, only if you are using an already created account,
-  // })
-
-  const safeAccount = await toSafeSmartAccount({
+  const nexusAccount = await toNexusSmartAccount({
     client: client,
     owners: [signer],
-    version: "1.4.1",
-    entryPoint: {
-      address: entryPoint07Address,
-      version: "0.7",
-    },
-    safe4337ModuleAddress: "0x19e52168B2e0A39a53dcB4cFDEA5850e496F873a",
-    erc7579LaunchpadAddress: "0x2E1a6a9802Eb62ec52E862a6373F1E52A4F3f395",
-    attesters: ["0x000000333034E9f539ce08819E12c1b8Cb29084d"], // This address belongs to Rhinestone. By designating them as attesters, you authorize that only modules explicitly approved by Rhinestone can be installed on your safe.
-    attestersThreshold: 0,
+    version: "1.0.0",
+    index: BigInt(0), // optional
+    factoryAddress,
+    validatorAddress,
+    address: address, // optional, only if you are using an already created account,
   })
+
 
 
   // nexusAccount.getNonce()
 
   const pimlicoClient = getPimlicoClient(chainId)
   const smartAccountClient = createSmartAccountClient({
-    account: safeAccount,
+    account: nexusAccount,
     chain: chain,
     bundlerTransport: http(getPimlicoEndpoint(chainId)),
     // paymaster: pimlicoClient,

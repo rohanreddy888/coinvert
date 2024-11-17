@@ -18,7 +18,18 @@ import { useEffect, useState } from "react";
 
 import { getSmartAccountClient } from "../lib/permissionless";
 import { privateKeyToAccount } from "viem/accounts";
-import { buildAutoSwap, buildEnableSmartSession, buildExecuteAutoSwap, buildOwnableModule, buildSmartSessionModule, buildUseSmartSession, sendOwnableTransaction, sendSessionTransaction, sendTransaction, Transaction } from "../lib/module";
+import {
+  buildAutoSwap,
+  buildEnableSmartSession,
+  buildExecuteAutoSwap,
+  buildOwnableModule,
+  buildSmartSessionModule,
+  buildUseSmartSession,
+  sendOwnableTransaction,
+  sendSessionTransaction,
+  sendTransaction,
+  Transaction,
+} from "../lib/module";
 import { Address, Hex, parseEther, WalletClient } from "viem";
 import { SmartAccountClient } from "permissionless";
 import { formatEther, parseUnits, ZeroAddress } from "ethers";
@@ -50,9 +61,11 @@ export default function Page() {
   const router = useRouter();
   const { handleLogOut, primaryWallet, user } = useDynamicContext();
 
-  const [ walletAddress, setWalletAddress ] = useState<Address>(ZeroAddress as Address);
-  const [ accountClient, setAccountClient ] = useState<any>();
-  const [ account, setAccount ] = useState<WalletClient>();
+  const [walletAddress, setWalletAddress] = useState<Address>(
+    ZeroAddress as Address
+  );
+  const [accountClient, setAccountClient] = useState<any>();
+  const [account, setAccount] = useState<WalletClient>();
   const [showAutoSwap, setShowAutoSwap] = useState(false);
   const [percentage, setPercentage] = useState(100);
   const [fromToken, setFromToken] = useState(2);
@@ -61,70 +74,86 @@ export default function Page() {
   const [enabling, setEnabling] = useState(false);
   const [tokenDetails, setTokenDetails]: any = useState([]);
 
-  const chainId = 11235
+  const chainId = 11235;
   // const chainId = 137
 
-
-
   useEffect(() => {
-    (async () => {  
-
+    (async () => {
       const account = await (primaryWallet as any)?.getWalletClient();
-    
-    const accountClient = await getSmartAccountClient({ signer: account,
-            factoryAddress: "0xE8067f399052083d60e66Ef414ddB9f166E2C100",
-          validatorAddress: "0x5aec3f1c43B920a4dc21d500617fb37B8db1992C",
-      chainId: chainId.toString()});
 
+      const accountClient = await getSmartAccountClient({
+        signer: account,
+        factoryAddress: "0xE8067f399052083d60e66Ef414ddB9f166E2C100",
+        validatorAddress: "0x5aec3f1c43B920a4dc21d500617fb37B8db1992C",
+        chainId: chainId.toString(),
+      });
 
-    setAccount(account)
-    setWalletAddress(accountClient?.account.address)
-    setAccountClient(accountClient)
-
-
+      setAccount(account);
+      setWalletAddress(accountClient?.account.address);
+      setAccountClient(accountClient);
     })();
   }, [primaryWallet]);
 
-
   async function sendAsset() {
-
-    const txHash = await sendTransaction(chainId.toString(), [
-      { to: "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
-      value: parseEther("1"), data: '0x'}], account
-    )
-
-
+    const txHash = await sendTransaction(
+      chainId.toString(),
+      [
+        {
+          to: "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+          value: parseEther("1"),
+          data: "0x",
+        },
+      ],
+      account
+    );
   }
 
   async function enableSmartSession() {
-
-
     const calls: Transaction[] = [];
-    const buildSmartSession = await buildSmartSessionModule(chainId.toString(), accountClient?.account?.address!)
-    if(buildSmartSession) {
-      calls.push(buildSmartSession)
+    const buildSmartSession = await buildSmartSessionModule(
+      chainId.toString(),
+      accountClient?.account?.address!
+    );
+    if (buildSmartSession) {
+      calls.push(buildSmartSession);
     }
-    const autoSwap = await buildAutoSwap(chainId.toString(), walletAddress, tokenDetails[fromToken].address , tokenDetails[toToken].address, BigInt(100), ZeroAddress as Hex)
-    const enableSmartSession = await buildEnableSmartSession(chainId.toString())
-    calls.push(enableSmartSession)
-    const allCalls: Transaction[] = calls.concat(autoSwap)
-    console.log(allCalls)
-    const txHash = await sendTransaction(chainId.toString(), allCalls, account)
-    
+    const autoSwap = await buildAutoSwap(
+      chainId.toString(),
+      walletAddress,
+      tokenDetails[fromToken].address,
+      tokenDetails[toToken].address,
+      BigInt(100),
+      ZeroAddress as Hex
+    );
+    const enableSmartSession = await buildEnableSmartSession(
+      chainId.toString()
+    );
+    calls.push(enableSmartSession);
+    const allCalls: Transaction[] = calls.concat(autoSwap);
+    console.log(allCalls);
+    const txHash = await sendTransaction(chainId.toString(), allCalls, account);
   }
 
   async function useSmartSession() {
-
     // const calls: Transaction[] = [{to: "0x0285F7b1bc7ef669f5F2554e8b0DaB0ab834Fc00", value: parseEther("1"), data: "0x"}];
- 
-    setShowTx(true)
-    const calls: Transaction[] = [await buildExecuteAutoSwap("0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270", parseUnits("100", 18))]
-    const buildSmartSession = await buildUseSmartSession(chainId.toString())
 
-    const txHash = await sendSessionTransaction(chainId.toString(), calls, account, walletAddress, buildSmartSession)
-    setShowTx(false)
+    setShowTx(true);
+    const calls: Transaction[] = [
+      await buildExecuteAutoSwap(
+        "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+        parseUnits("100", 18)
+      ),
+    ];
+    const buildSmartSession = await buildUseSmartSession(chainId.toString());
 
-    
+    const txHash = await sendSessionTransaction(
+      chainId.toString(),
+      calls,
+      account,
+      walletAddress,
+      buildSmartSession
+    );
+    setShowTx(false);
   }
 
   useEffect(() => {
@@ -140,7 +169,11 @@ export default function Page() {
             const balance =
               token.address == ZeroAddress
                 ? formatEther(await provider.getBalance(walletAddress))
-                : await getTokenBalance(token.address!, walletAddress, provider);
+                : await getTokenBalance(
+                    token.address!,
+                    walletAddress,
+                    provider
+                  );
 
             return {
               ...token,
@@ -153,8 +186,6 @@ export default function Page() {
       }
     })();
   }, [chainId, walletAddress]);
-
-
 
   useEffect(() => {
     if (!user) {
@@ -178,24 +209,29 @@ export default function Page() {
                 <div className="flex flex-col gap-1 justify-start items-start">
                   <div>
                     <h4 className="text-slate-500 text-sm">Balance</h4>
-                    <h5 className="text-4xl font-black">{fixDecimal(tokenDetails[0]?.balance, 4)} ETH</h5>
+                    <h5 className="text-4xl font-black">
+                      {fixDecimal(tokenDetails[0]?.balance, 4)} ETH
+                    </h5>
                   </div>
                 </div>
 
                 <div className="flex flex-row justify-start items-center gap-2 text-sm text-slate-500">
                   {Truncate(walletAddress, 22, "...")}
                   <CopyString
-                    copyText={walletAddress|| ""}
+                    copyText={walletAddress || ""}
                     icon={<ClipboardCopy size={16} />}
                   />
                   <QrCode size={16} />
                 </div>
               </div>
               <div className="flex flex-col gap-2 flex-grow overflow-hidden">
-                <Tabs defaultValue="holdings" className="w-[400px]">
+                <Tabs defaultValue="holdings" className="w-full">
                   <TabsList className=" bg-transparent p-0 grid grid-cols-2 gap-2 w-fit">
                     <TabsTrigger
-                      onClick={async ()=> {await useSmartSession()}}
+                      onClick={async () => {
+                        // eslint-disable-next-line react-hooks/rules-of-hooks
+                        await useSmartSession();
+                      }}
                       className="data-[state=active]:bg-border data-[state=active]:text-white data-[state=active]:font-bold"
                       value="holdings"
                     >
@@ -203,18 +239,24 @@ export default function Page() {
                     </TabsTrigger>
                   </TabsList>
                   <TabsContent value="holdings">
-                    <div className="flex flex-col flex-grow overflow-y-scroll divide-y divider-slate-500">
-                      
-                      { tokenDetails.map( (token: any) => <div className="flex flex-row justify-between items-center py-2">
-                        <div className="flex flex-row justify-start items-center gap-2">
-                        <Image src={token.icon} alt="token" height={30} width={30}/>
-                          <h4 className="font-medium">{token.name}</h4>
+                    <div className="flex flex-col flex-grow divide-y divider-slate-500">
+                      {tokenDetails.map((token: any) => (
+                        <div
+                          key={token.toString()}
+                          className="flex flex-row justify-between items-center py-2"
+                        >
+                          <div className="flex flex-row justify-start items-center gap-2">
+                            <Image
+                              src={token.icon}
+                              alt="token"
+                              height={30}
+                              width={30}
+                            />
+                            <h4 className="font-medium">{token.name}</h4>
+                          </div>
+                          <div> {fixDecimal(token.balance, 4)}</div>
                         </div>
-                        <div> {fixDecimal(token.balance, 4)}</div>
-                      </div>)
-                      }
-
-               
+                      ))}
                     </div>
                   </TabsContent>
                 </Tabs>
@@ -237,8 +279,13 @@ export default function Page() {
                 <div className="flex flex-row justify-between items-center py-2">
                   <div className="flex flex-row justify-start items-center gap-4">
                     <div className="flex flex-row justify-start items-center gap-1">
-                    <Image src={tokenDetails[2]?.icon} alt="token" height={30} width={30}/>
-                    <h4 className="font-medium">{tokenDetails[2]?.name}</h4>
+                      <Image
+                        src={tokenDetails[2]?.icon}
+                        alt="token"
+                        height={30}
+                        width={30}
+                      />
+                      <h4 className="font-medium">{tokenDetails[2]?.name}</h4>
                     </div>
                     <Image
                       src="/pacman.png"
@@ -247,12 +294,17 @@ export default function Page() {
                       height={20}
                     />
                     <div className="flex flex-row justify-start items-center gap-1">
-                    <Image src={tokenDetails[5]?.icon} alt="token" height={30} width={30}/>
-                    <h4 className="font-medium">{tokenDetails[5]?.name}</h4>
-                    </div>                  </div>
+                      <Image
+                        src={tokenDetails[5]?.icon}
+                        alt="token"
+                        height={30}
+                        width={30}
+                      />
+                      <h4 className="font-medium">{tokenDetails[5]?.name}</h4>
+                    </div>{" "}
+                  </div>
                   <div>0.00</div>
                 </div>
-               
               </div>
             </TabsContent>
             <TabsContent value="settings" className="flex flex-grow">
@@ -316,8 +368,13 @@ export default function Page() {
                 Select Swap Tokens
               </label>
               <div className="flex flex-row justify-center items-center gap-4">
-              <Select value={fromToken.toString()} onValueChange={(value) => {setFromToken(parseInt(value))}}>
-              <SelectTrigger className="w-full bg-border focus:outline-none focus:ring-0">
+                <Select
+                  value={fromToken.toString()}
+                  onValueChange={(value) => {
+                    setFromToken(parseInt(value));
+                  }}
+                >
+                  <SelectTrigger className="w-full bg-border focus:outline-none focus:ring-0">
                     <SelectValue placeholder="In Token" />
                   </SelectTrigger>
                   <SelectContent>
@@ -342,13 +399,18 @@ export default function Page() {
                   width={20}
                   height={20}
                 />
-                <Select value={toToken.toString()} onValueChange={(value) => {setToToken(parseInt(value))}}>
+                <Select
+                  value={toToken.toString()}
+                  onValueChange={(value) => {
+                    setToToken(parseInt(value));
+                  }}
+                >
                   <SelectTrigger className="w-full bg-border focus:outline-none focus:ring-0">
-                    <SelectValue  placeholder="Out Token" />
+                    <SelectValue placeholder="Out Token" />
                   </SelectTrigger>
                   <SelectContent>
                     {tokenDetails.map((token: any, t: any) => (
-                      <SelectItem key={t} value={t.toString()} >
+                      <SelectItem key={t} value={t.toString()}>
                         <div className="flex flex-row justify-center items-center gap-2">
                           <Image
                             src={token.icon}
@@ -377,8 +439,15 @@ export default function Page() {
                 }}
               />
             </div>
-            <button onClick={async ()=> { setEnabling(true); await enableSmartSession(); setEnabling(false)}} className="bg-red-200 text-red-600 flex flex-row justify-center items-center gap-4 w-full px-4 py-2.5 rounded-lg border-2 border-border font-semibold mt-4">
-              {enabling ? <Loading /> : "Create Auto Swap" }
+            <button
+              onClick={async () => {
+                setEnabling(true);
+                await enableSmartSession();
+                setEnabling(false);
+              }}
+              className="bg-red-200 text-red-600 flex flex-row justify-center items-center gap-4 w-full px-4 py-2.5 rounded-lg border-2 border-border font-semibold mt-4"
+            >
+              {enabling ? <Loading /> : "Create Auto Swap"}
             </button>
           </div>
         </DialogContent>
